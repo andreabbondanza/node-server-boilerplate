@@ -22,7 +22,7 @@ import { generate } from "generate-password";
 
 
     /**
-     * Pratica profilo
+     * Get email
      * @returns 
      */
     public getEmail(): Route
@@ -77,8 +77,7 @@ import { generate } from "generate-password";
                         if (!body.pwd) return res.status(400).send(initSR({ Message: "Password non valida", Error: { Num: 400, Desc: "Bad Password" } }));
                         const pwd: string = body.pwd;
                         const hash = crypto.createHash(this.env.configHost.encryption.algorithm).update(pwd.trim()).digest(this.env.configHost.encryption.encoding)
-                        // TODO: Sostituire la pwd con la hash
-                        const user = await authService.login(body.email, pwd);
+                        const user = await authService.login(body.email, hash);
                         if (user)
                         {
                             response.Data = authService.tokenGeneration(user, secret);
