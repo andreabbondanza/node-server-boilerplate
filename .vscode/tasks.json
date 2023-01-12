@@ -1,0 +1,79 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm -r ./dist",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "dev-host-files",
+            "type": "shell",
+            "command": "cp dev-host.json ./dist/dev-host.json",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                // "clean",
+                "transpile"
+            ]
+        },
+        {
+            "label": "host-files",
+            "type": "shell",
+            "command": "cp host.json ./dist/host.json",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "clean",
+                "transpile-production"
+            ]
+        },
+        {
+            "label": "path-alias-replace",
+            "type": "shell",
+            "command": "node ./node_modules/tspath -f",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "transpile",
+            "type": "shell",
+            "command": "node ./node_modules/typescript/bin/tsc --build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "transpile-production",
+            "type": "shell",
+            "command": "node ./node_modules/typescript/bin/tsc --build ./tsconfig.production.json",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "build-prod",
+            "type": "shell",
+            "dependsOn": [
+                "host-files"
+            ]
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "dependsOn": [
+                "dev-host-files"
+            ]
+        }
+    ]
+}

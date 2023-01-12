@@ -1,0 +1,30 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 21117
+    },
+    "app": {
+        "secret": "secret",
+        "name": "Site Name"
+    },
+    "db": {
+        "tprefix": "",
+        "host": "",
+        "port": 3306,
+        "schema": "",
+        "usr": "",
+        "pwd": "",
+        "options": "UseAffectedRows=False;Allow User Variables=True"
+    },
+    "encryption": {
+        "algorithm": "sha512",
+        "encoding": "hex"
+    },
+    "email": {
+        "host": "smtp.mailtrap.io",
+        "port": 2525,
+        "user": "",
+        "pass": "",
+        "from": "mail@noreply.it"
+    }
+}
