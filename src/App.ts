@@ -62,9 +62,9 @@ export class App
             for (const method of methods)
             {
                 const temp: any = controller.instance;
-                const path: Route | undefined = temp[method]();
-                if (!path)
-                    throw new Error("A Route not defined");
+                const path: Route = temp[method]();
+                if (path.path === undefined)
+                    throw new Error(`Method ${method} in controller ${Object.keys(controller.controllerClass)[0]} is not a valid endpoint`);
                 this._env.setRoute(path);
                 log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's path: ${log.evidence(path.path)}`);
             }
