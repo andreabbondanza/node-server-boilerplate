@@ -9,7 +9,7 @@ import { _IS_DEVELOPMENT_ } from "./common/Globals.common";
 import { getMethods } from "./common/Utils.common";
 import { IControllerTuple } from "./interfaces/IControllerTuple.interface";
 import cors from 'cors'
-import { Routes } from "./common/Routes.common";
+import { Route, Routes } from "./common/Routes.common";
 
 
 export class App
@@ -62,7 +62,9 @@ export class App
             for (const method of methods)
             {
                 const temp: any = controller.instance;
-                const path = temp[method]();
+                const path: Route | undefined = temp[method]();
+                if (!path)
+                    throw new Error("A Route not defined");
                 this._env.setRoute(path);
                 log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's path: ${log.evidence(path.path)}`);
             }
