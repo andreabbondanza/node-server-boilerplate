@@ -4,7 +4,8 @@ import { _DB_TABLES_ as DB_TABLES } from "../common/Globals.common";
 import { AppEnvironment } from "../AppEnvironment";
 import { Logger } from "../common/Logger.common";
 import { GenericModel } from "../shared/Generic.model";
-export class DBService
+
+export class MYSqlService
 {
     private _cfg: IConfigDb;
     private _logger: Logger;
