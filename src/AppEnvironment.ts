@@ -13,7 +13,7 @@ export class AppEnvironment
     private _configHost: IConfigHost;
     public setRoute(route: Route)
     {
-        this._routes[route.path] = route;
+        this._routes[route.path + "-" + route.method] = route;
     }
     public get routes(): IRouteIndex
     {
