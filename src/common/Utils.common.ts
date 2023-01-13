@@ -5,10 +5,8 @@ import { _IS_DEVELOPMENT_ } from "./Globals.common";
 import { Method, Route } from "./Routes.common";
 
 /**
- * Ritorna la lista dei metodi di un controller (solo quelli che non iniziano con _)
- * @param routes l'elenco delle routes
- * @param path la path in ingress
- * @returns ritorna null se non la trova, l'oggetto altrimenti
+ * Return all the methods of a controller (except the constructor and the ones that start with _)
+ * @param controller the controller
  */
 export function getMethods(controller: IController)
 {
@@ -17,10 +15,11 @@ export function getMethods(controller: IController)
     (name) => name !== "constructor" && typeof (obj[name]) === "function" && !name.startsWith("_"))
 }
 /**
- * Ritorna la route in base alla path
- * @param routes l'elenco delle routes
- * @param path la path in ingress
- * @returns ritorna null se non la trova, l'oggetto altrimenti
+ * Returns the route object from the path and the method
+ * @param routes routes index from environment
+ * @param path the input path (from the request)
+ * @param method the input method (from the request)
+ * @returns return null if the route is not found, otherwise the route object
  */
 export function getRoute(routes: IRouteIndex, path: string, method: string): Route | null
 {
@@ -33,7 +32,7 @@ export function getRoute(routes: IRouteIndex, path: string, method: string): Rou
   return null;
 }
 /**
- * Inizializza standard response vuota
+ * Init an empty StandardResponse
  * @param data standard response
  * @returns 
  */
