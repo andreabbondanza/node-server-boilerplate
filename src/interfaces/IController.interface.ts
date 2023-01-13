@@ -1,11 +1,11 @@
 import { Express } from "express";
 import { AppEnvironment } from "../AppEnvironment";
-import { DBService } from "../services/DBService.service";
+import { MYSqlService } from "../services/MYSqlService.service";
 import { FileService } from "../services/FileService.service";
 
 export interface IController
 {
     env: AppEnvironment;
-    dbService: DBService | null;
+    dbService: MYSqlService | null;
     fileService: FileService | null;
 }

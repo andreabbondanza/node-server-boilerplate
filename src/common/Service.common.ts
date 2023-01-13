@@ -2,17 +2,17 @@ import { AppEnvironment } from "../AppEnvironment";
 import { ErrorServiceInit } from "../errors/ErrorServiceInit.error";
 import { IController } from "../interfaces/IController.interface";
 import { IService } from "../interfaces/IService.interface";
-import { DBService } from "../services/DBService.service";
+import { MYSqlService } from "../services/MYSqlService.service";
 import { Logger } from "../common/Logger.common";
 import { FileService } from "../services/FileService.service";
 
 export class Service implements IService
 {
-    private _db: DBService | null = null;
+    private _db: MYSqlService | null = null;
     private _fs: FileService | null = null;
     private _log: Logger | null = null;
     private _env: AppEnvironment | null = null;
-    protected get db(): DBService
+    protected get db(): MYSqlService
     {
         if (this._db) return this._db;
         else throw new ErrorServiceInit();

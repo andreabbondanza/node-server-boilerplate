@@ -3,7 +3,7 @@
 import { IController } from "../interfaces/IController.interface";
 import { Express, Request, RequestHandler } from "express";
 import { AppEnvironment } from "../AppEnvironment";
-import { DBService } from "../services/DBService.service";
+import { MYSqlService } from "../services/MYSqlService.service";
 import { IService } from "../interfaces/IService.interface";
 import { ParsedQs } from "qs";
 import { IAuthToken } from "../interfaces/IAuthToken.interface";
@@ -26,7 +26,7 @@ export class Controller implements IController
     protected server: Express;
     protected baseApiPath: string = "/api/v1/";
     protected controllerPath: string = "";
-    private _dbService: DBService | null = null;
+    private _dbService: MYSqlService | null = null;
     private _fsService: FileService | null = null;
     private _log: Logger;
     protected get log(): Logger
@@ -42,7 +42,7 @@ export class Controller implements IController
     public get dbService()
     {
         if (!this._dbService)
-            this._dbService = new DBService(this.env);
+            this._dbService = new MYSqlService(this.env);
         return this._dbService;
     }
     /**
