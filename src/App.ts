@@ -66,7 +66,7 @@ export class App
                 if (path.path === undefined)
                     throw new Error(`Method ${method} in controller ${Object.keys(controller.controllerClass)[0]} is not a valid endpoint`);
                 this._env.setRoute(path);
-                log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's path: ${log.evidence(path.path)}`);
+                log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's method ${log.evidence(path.method.toUpperCase())} and path: ${log.evidence(path.path)}`);
             }
             log.log("");
         }
