@@ -9,6 +9,7 @@ import { Route } from "../common/Routes.common";
 import { AuthService } from "../services/Auth.service";
 import { EmailService } from "../services/EmailService.service";
 import { generate } from "generate-password";
+import { LoginResponse } from "../shared/LoginResponse.model";
 
 /**
  * NOTE: ALl methods that start with _ will not be "ROUTED" at server startup
@@ -65,18 +66,18 @@ import { generate } from "generate-password";
             .endpoint(
                 async (req, res) =>
                 {
-                    const response: IStandardResponse<any> = initSR();
+                    const response: IStandardResponse<LoginResponse> = initSR();
                     try
                     {
                         const authService = this.initService<AuthService>(new AuthService());
                         const secret = this.env.configHost.app.secret;
                         const body = req.body;
 
-                        if (!body) return res.status(400).send(initSR({ Message: "Dati non validi", Error: { Num: 400, Desc: "Body unsupported" } }));
-                        if (!body.email || !REGEX_EMAIL.test(body.email)) return res.status(400).send(initSR({ Message: "Email non valida", Error: { Num: 400, Desc: "Bad Email" } }));
-                        if (!body.pwd) return res.status(400).send(initSR({ Message: "Password non valida", Error: { Num: 400, Desc: "Bad Password" } }));
+                        if (!body) return res.status(400).send(initSR({ Message: "Invalid body", Error: { Num: 400, Desc: "Body unsupported" } }));
+                        if (!body.email || !REGEX_EMAIL.test(body.email)) return res.status(400).send(initSR({ Message: "Invalid email", Error: { Num: 400, Desc: "Bad Email" } }));
+                        if (!body.pwd) return res.status(400).send(initSR({ Message: "Invalid password", Error: { Num: 400, Desc: "Bad Password" } }));
                         const pwd: string = body.pwd;
-                        const hash = crypto.createHash(this.env.configHost.encryption.algorithm).update(pwd.trim()).digest(this.env.configHost.encryption.encoding)
+                        const hash = crypto.createHash(this.env.configHost.encryption.algorithm).update(pwd.trim()).digest(this.env.configHost.encryption.encoding);
                         const user = await authService.login(body.email, hash);
                         if (user)
                         {
@@ -85,8 +86,8 @@ import { generate } from "generate-password";
                         }
                         else
                         {
-                            response.Message = "Utente non trovato";
-                            res.status(400).send(response);
+                            response.Message = "User not found";
+                            res.status(404).send(response);
                         }
                     } catch (err)
                     {
@@ -103,7 +104,7 @@ import { generate } from "generate-password";
             .endpoint(
                 async (req, res) =>
                 {
-                    const response: IStandardResponse<any> = initSR();
+                    const response: IStandardResponse<LoginResponse> = initSR();
                     try
                     {
                         const uservice = this.initService<AuthService>(new AuthService());
