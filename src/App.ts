@@ -1,30 +1,49 @@
-import { Express, json, RequestHandler } from "express";
+import express, { Express, RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { ParsedQs } from "qs";
 import { IConfigHost } from "./interfaces/IConfigHost.interface";
 import { AppEnvironment } from "./AppEnvironment";
-import { _IS_DEVELOPMENT_ } from "./common/Globals.common";
 import { getMethods } from "./common/Utils.common";
 import { IControllerTuple } from "./interfaces/IControllerTuple.interface";
-import cors from 'cors'
+
 import { Route, Routes } from "./common/Routes.common";
 
 
 export class App
 {
     private _env: AppEnvironment;
-    public constructor(server: Express)
-    {
-        this._env = new AppEnvironment(server, _IS_DEVELOPMENT_, Routes);
-        // abilito le risposte in json
-        this._env.server.use(json());
-        this._env.server.use(cors());
 
+    /**
+     * App Constructor
+     * @param server the server express instance
+     * @param isDev boolean value to set the environment in dev mode
+     */
+    public constructor(server: Express, isDev: boolean = false)
+    {
+        this._env = new AppEnvironment(server, isDev, Routes);
     }
 
-    public appMiddlewares(...handlers: ((env: AppEnvironment) => RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>)[]): App
+    /**
+     * Initialize application
+     * @param app 
+     * @returns App Instance
+     */
+
+    public appSetup(app: (app: Express) => void): App
+    {
+        app(this._env.server);
+        return this;
+    }
+
+    /**
+     * initialize all middlewares
+     * @param handlers list of middlewares 
+     * @returns App instance
+     */
+
+    public appCustomMiddlewares(...handlers: ((env: AppEnvironment) => RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>)[]): App
     {
         for (const handler of handlers)
         {
@@ -50,9 +69,32 @@ export class App
         }
         return result;
     }
-    public listen(listenCallback: (config: IConfigHost) => void)
+
+    /**
+     * Load all repositories from repositories folder
+     */
+
+    private loadRepositories(): void
+    {
+        const repos = readdirSync("./repositories").where(x => x.endsWith(".repository.js"));
+        for (const repo of repos)
+        {
+            const currRepo = require("./" + join("./repositories", repo));
+            const name = Object.keys(currRepo)[0];
+            this._env.pushRepository(name, new (currRepo[name])(this._env.configHost, this._env.logger));    
+        }
+        
+    }
+
+    /**
+     * Listener for the server
+     * @param listenCallback 
+     */
+
+    public listen(listenCallback: (config: AppEnvironment) => void)
     {
         const log = this._env.logger;
+        this.loadRepositories();
         const controllers = this.loadControllers();
         log.info("Start Endpoint Configuration ------------------------------------------ \n");
         for (const controller of controllers)
@@ -74,7 +116,7 @@ export class App
         this._env.server.listen(
             this._env.configHost.server.port,
             this._env.configHost.server.host,
-            () => { listenCallback(this._env.configHost) });
+            () => { listenCallback(this._env) });
     }
 
 }

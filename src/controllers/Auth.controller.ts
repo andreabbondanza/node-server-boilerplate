@@ -18,9 +18,8 @@ import { LoginResponse } from "../shared/LoginResponse.model";
 {
     public constructor(env: AppEnvironment)
     {
-        super(env, "public/auth");
+        super(env, "auth");
     }
-
 
     /**
      * Get email
@@ -37,7 +36,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                     try
                     {
                         const mail = req.params.email;
-                        const pservice = this.initService<AuthService>(new AuthService());
+                        const pservice = this._initService<AuthService>(new AuthService());
                         const user = await pservice.getAuthByEmail(mail);
                         if (user)
                         {
@@ -59,7 +58,10 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                 }).route;
     }
 
-
+    /**
+     * 
+     * @returns 
+     */
     public login(): Route
     {
         return this._registerEndpoint("/login", ["public"], "post")
@@ -69,7 +71,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                     const response: IStandardResponse<LoginResponse> = initSR();
                     try
                     {
-                        const authService = this.initService<AuthService>(new AuthService());
+                        const authService = this._initService<AuthService>(new AuthService());
                         const secret = this.env.configHost.app.secret;
                         const body = req.body;
 
@@ -107,7 +109,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                     const response: IStandardResponse<LoginResponse> = initSR();
                     try
                     {
-                        const uservice = this.initService<AuthService>(new AuthService());
+                        const uservice = this._initService<AuthService>(new AuthService());
                         const secret = this.env.configHost.app.secret;
                         const rtoken = req.headers["r-token"] as string;
                         try
@@ -156,8 +158,8 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                     const response: IStandardResponse<any> = initSR();
                     try
                     {
-                        const emailservice = this.initService<EmailService>(new EmailService());
-                        const authService = this.initService<AuthService>(new AuthService());
+                        const emailservice = this._initService<EmailService>(new EmailService());
+                        const authService = this._initService<AuthService>(new AuthService());
                         const mail = req.params.email;
                         if (!mail || !REGEX_EMAIL.test(mail)) return res.status(400).send(initSR({ Message: "Email non valida", Error: { Num: 400, Desc: "Bad Email" } }));
                         const auth = await authService.getAuthByEmail(mail);
@@ -191,7 +193,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                     try
                     {
 
-                        const emailservice = this.initService<EmailService>(new EmailService());
+                        const emailservice = this._initService<EmailService>(new EmailService());
                         if (!req.params.token) return res.status(400).send(initSR({ Message: "Dati non validi", Error: { Num: 400, Desc: "Token unsupported" } }));
                         const verified = verify(req.params.token, this.env.configHost.app.secret) as JwtPayload;
 
@@ -202,7 +204,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
 
                         if ((DateTime.fromISO(DateTime.now().toString())) < expiration_date)
                         {
-                            const authService = this.initService<AuthService>(new AuthService());
+                            const authService = this._initService<AuthService>(new AuthService());
                             const auth = await authService.getAuthByEmail(vemail);
                             const pwd = generate({
                                 length: 10,
@@ -215,8 +217,8 @@ import { LoginResponse } from "../shared/LoginResponse.model";
 
                             if (auth)
                             {
-                                const updatepassword = await authService.updateAuthPassword(auth, hash);
-                                if (updatepassword)
+                                const updated = await authService.updatePassword(auth.Id, hash);
+                                if (updated)
                                 {
                                     await emailservice.sendEmailPassword(vemail, pwd);
                                     response.Data = "Password Resettata";

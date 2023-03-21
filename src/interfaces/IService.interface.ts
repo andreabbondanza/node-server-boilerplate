@@ -1,6 +1,6 @@
-import { IController } from "./IController.interface";
+import { AppEnvironment } from "../AppEnvironment";
 
 export interface IService
 {
-    init(environment: IController): IService;
+    init(environment: AppEnvironment): IService;
 }

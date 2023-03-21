@@ -5,7 +5,8 @@
     },
     "app": {
         "secret": "secret",
-        "name": "Site Name"
+        "name": "Site Name",
+        "baseApiPath": "/api/v1"
     },
     "db": {
         "tprefix": "",

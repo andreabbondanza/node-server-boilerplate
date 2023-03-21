@@ -4,27 +4,21 @@ import { _DB_TABLES_ as DB_TABLES } from "../common/Globals.common";
 import { AppEnvironment } from "../AppEnvironment";
 import { Logger } from "../common/Logger.common";
 import { GenericModel } from "../shared/Generic.model";
+import { Repository } from "../common/Repository.common";
 
-export class MYSqlService
+export class MYSqlRepository extends Repository
 {
-    private _cfg: IConfigDb;
-    private _logger: Logger;
     private _connection: Connection | null = null;
-    public constructor(env: AppEnvironment)
-    {
-        this._cfg = env.configHost.db;
-        this._logger = env.logger;
-    }
 
     public async getConnection()
     {
         if (!this._connection)
             this._connection = await createConnection({
-                host: this._cfg.host,
-                user: this._cfg.usr,
-                password: this._cfg.pwd,
-                database: this._cfg.schema,
-                port: this._cfg.port
+                host: this._cfg.db.host,
+                user: this._cfg.db.usr,
+                password: this._cfg.db.pwd,
+                database: this._cfg.db.schema,
+                port: this._cfg.db.port
             });
         return this._connection;
     }
@@ -57,7 +51,7 @@ export class MYSqlService
     public async select<T>(tname: DB_TABLES, conditions: Conditon<T> | Conditon<T>[] = [])
     {
         const conn = await this.getConnection();
-        let query = `SELECT * FROM ${this._cfg.tprefix}${tname} WHERE`;
+        let query = `SELECT * FROM ${this._cfg.db.tprefix}${tname} WHERE`;
         const values = [];
         if (typeof conditions[0] === "string")
         {
@@ -93,7 +87,7 @@ export class MYSqlService
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `INSERT INTO ${this._cfg.tprefix}${tableName} `;
+        let query = `INSERT INTO ${this._cfg.db.tprefix}${tableName} `;
         const columns: string[] = [];
         for (const column of Object.keys(obj as any))
         {
@@ -126,7 +120,7 @@ export class MYSqlService
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `UPDATE ${this._cfg.tprefix}${tableName} SET`;
+        let query = `UPDATE ${this._cfg.db.tprefix}${tableName} SET`;
         const values = [];
         for (const column of columns)
         {
@@ -169,7 +163,7 @@ export class MYSqlService
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `DELETE FROM ${this._cfg.tprefix}${tableName} WHERE`;
+        let query = `DELETE FROM ${this._cfg.db.tprefix}${tableName} WHERE`;
         const values = [];
         if (typeof conditions[0] === "string")
         {

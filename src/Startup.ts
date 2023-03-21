@@ -1,33 +1,38 @@
 import { App } from "./App";
 import express from "express";
 import init from "dewlinq";
-import { Logger } from "./common/Logger.common";
 import { routeMiddleware } from "./middlewares/RouteMiddleware.middleware";
 import { AppEnvironment } from "./AppEnvironment";
 import { log } from "./middlewares/Log.middleware";
+import { _IS_DEVELOPMENT_ } from "./common/Globals.common";
+import cors from "cors";
 
 init();
 
 
-const server = new App(express());
+const server = new App(express(), _IS_DEVELOPMENT_);
 
 server
-    .appMiddlewares((env: AppEnvironment) => (req, res, next) =>
+    .appSetup((app) =>
     {
-        env.logger.debug(env.logger.evidence("NUOVA RICHIESTA:\nINIZIO MIDDLEWARES------------------------------\n"));
-        next();
-    },
+        app.use(express.json());
+        app.use(cors())
+    })
+    .appCustomMiddlewares(
+        (env: AppEnvironment) => (req, res, next) =>
+        {
+            env.logger.debug(env.logger.evidence("NEW REQUEST :\n STARTS MIDDLEWARES------------------------------\n"));
+            next();
+        },
         log,
         routeMiddleware,
         (env: AppEnvironment) => (req, res, next) =>
         {
-            env.logger.debug(env.logger.evidence("FINE MIDDLEWARES------------------------------\n"));
+            env.logger.debug(env.logger.evidence("ENDS MIDDLEWARES------------------------------\n"));
             next();
         })
-    .listen((config) =>
+    .listen((env) =>
     {
-        console.log("listening on " + config.server.port)
-        // logger.log(`In ascolto su indirizzo: ${config.server.host}
-        //         e porta: ${config.server.port}`)
+        env.logger.log("listening on " + env.logger.evidence(env.configHost.server.port.toString()))
     })
 

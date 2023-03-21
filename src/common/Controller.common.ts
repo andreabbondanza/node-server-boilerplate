@@ -3,7 +3,6 @@
 import { IController } from "../interfaces/IController.interface";
 import { Express, Request, RequestHandler } from "express";
 import { AppEnvironment } from "../AppEnvironment";
-import { MYSqlService } from "../services/MYSqlService.service";
 import { IService } from "../interfaces/IService.interface";
 import { ParsedQs } from "qs";
 import { IAuthToken } from "../interfaces/IAuthToken.interface";
@@ -11,8 +10,6 @@ import { Logger } from "../common/Logger.common";
 import { Service } from "../common/Service.common";
 import { Roles } from "../shared/Auth.model";
 import { Method, Route } from "./Routes.common";
-import { FileService } from "../services/FileService.service";
-import { ParamsDictionary } from "express-serve-static-core";
 import { Endpoint } from "./Endpoint.common";
 
 
@@ -26,25 +23,12 @@ export class Controller implements IController
     protected server: Express;
     protected baseApiPath: string = "/api/v1/";
     protected controllerPath: string = "";
-    private _dbService: MYSqlService | null = null;
-    private _fsService: FileService | null = null;
     private _log: Logger;
     protected get log(): Logger
     {
         return this._log;
     }
-    public get fileService(): FileService
-    {
-        if (!this._fsService)
-            this._fsService = new FileService(this.env);
-        return this._fsService;
-    }
-    public get dbService()
-    {
-        if (!this._dbService)
-            this._dbService = new MYSqlService(this.env);
-        return this._dbService;
-    }
+    
     /**
      * Help to build path
      * @param path path to add to the base
@@ -54,12 +38,7 @@ export class Controller implements IController
     {
         return `${this.baseApiPath}${this.controllerPath}${path}`;
     }
-    protected _getService<T extends IService>(): T
-    {
-        //    const t = new T();
-        return {} as T;
 
-    }
     /**
      * Return user auth type
      * @param req request object
@@ -74,25 +53,24 @@ export class Controller implements IController
      * @param service istance of the service to init
      * @returns 
      */
-    protected initService<T extends Service>(service: IService): T
+    protected _initService<T extends Service>(service: IService): T
     {
-        return service.init(this) as T;
+        return service.init(this._env) as T;
     }
-
 
     /**
      * Create routing object
      * @param path The path
      * @param roles routing roles
-     * @param toTest regex for path
+     * @param pathRegex regex for path
      * @param method http method
      * @returns the route object
      */
-    public _buildRoute(path: string, roles: Roles[], method: Method = "get", toTest?: RegExp): Route
+    public _buildRoute(path: string, roles: Roles[], method: Method = "get", pathRegex?: RegExp): Route
     {
-        let stringToTest = toTest?.source;
+        let stringToTest = pathRegex?.source;
         let endingTest = / /;
-        if (!toTest)
+        if (!pathRegex)
         {
             stringToTest = path.replace(/:(\w+)/gi, "[A-z0-9\-\@\.]+")
             endingTest = /\/{0,1}$/;
@@ -130,7 +108,8 @@ export class Controller implements IController
     {
         this._env = env;
         this.server = env.server;
-        this._log = new Logger();
+        this._log = new Logger(env.isDev);
         this.controllerPath = controllerPath;
+        this.baseApiPath = env.configHost.app.baseApiPath !== "" ? env.configHost.app.baseApiPath : this.baseApiPath;
     }
 }

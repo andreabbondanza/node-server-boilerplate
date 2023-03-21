@@ -43,7 +43,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                             response.Message = "Non hai i permessi";
                             env.logger.debug("\n");
                             // tutto il resto
-                            res.status(401).send(response);
+                            return res.status(401).send(response);
                         }
                     } catch (error)
                     {
@@ -53,7 +53,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                             response.Error.Desc = err.message;
                             response.Message = "Token expired";
                             //token expired, ask for refresh
-                            res.header("x-refresh", "1").status(401).send(response);
+                            return res.header("x-refresh", "1").status(401).send(response);
                         }
                         env.logger.debug(err.name);
                         env.logger.debug(err.message);
@@ -61,7 +61,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                         response.Message = "Invalid token";
                         env.logger.debug("\n");
                         // all other errors
-                        res.status(401).send(response);
+                        return res.status(401).send(response);
                     }
 
                 }
@@ -70,7 +70,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                     env.logger.debug("\n");
                     response.Error.Desc = "No token provided";
                     response.Message = "No token provided";
-                    res.status(401).send(response);
+                    return res.status(401).send(response);
                 }
                 env.logger.debug("\n");
             }
@@ -80,7 +80,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
             env.logger.debug("\n");
             response.Error.Desc = "Page not found";
             response.Message = "Url not found";
-            res.status(404).send(response)
+            return res.status(404).send(response)
         }
 
     }

@@ -15,11 +15,4 @@ for (const arg of process.argv)
 
 export const _IS_DEVELOPMENT_: boolean = debug;
 
-export type _DB_TABLES_ = "Auth" |
-    "ProfiloPratica" |
-    "TimelinePratica" |
-    "DocumentiPratica" |
-    "NotificaPratica" |
-    "Pratica" |
-    "TipoDocumento" |
-    "Paypal";
+export type _DB_TABLES_ = "Auth" | "OtherTable";

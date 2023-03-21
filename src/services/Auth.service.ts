@@ -1,24 +1,24 @@
-import { Service } from "../common/Service.common"
-import { Auth, Roles } from "../shared/Auth.model";
+import { Service } from "../common/Service.common";
+import { Auth } from "../shared/Auth.model";
 import { sign } from 'jsonwebtoken';
 import { DateTime } from 'luxon';
-import { _IS_DEVELOPMENT_ } from '../common/Globals.common';
 import { IAuthToken } from '../interfaces/IAuthToken.interface';
 import { IRefreshToken } from '../interfaces/IRefreshToken.interface';
 import { LoginResponse } from "../shared/LoginResponse.model";
+import { MYSqlRepository } from "../repositories/MySqlRepository.repository";
 
 export class AuthService extends Service
 {
 
     /**
-     * NOTA: Genera la coppia di token
-     * @param user utente radice
+     * NOTE: generate token and refresh token
+     * @param user user
      * @param secret secret
-     * @returns coppia
+     * @returns couple of token
      */
     public tokenGeneration(user: Auth, secret: string): LoginResponse
     {
-        const _tokenExpDays: number = _IS_DEVELOPMENT_ ? 500 : 3;
+        const _tokenExpDays: number = this.env.isDev ? 500 : 3;
         const data: IAuthToken = {
             id: user.Id,
             name: user.Name + " " + user.Surname,
@@ -34,43 +34,69 @@ export class AuthService extends Service
         const refresh_token = sign(rdata, secret, { algorithm: "HS512" });
         return { auth_token, refresh_token };
     }
-
+    /**
+     * Check if user and password are correct and return the user
+     * @param mail email
+     * @param pwd password
+     * @returns user or null if not found
+     */
     public async login(mail: string, pwd: string): Promise<Auth | null>
     {
-        const rows = await this.db.select<Auth>("Auth", [["Email", "=", mail], ["Password", "=", pwd]]);
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const rows = await db.select<Auth>("Auth", [["Email", "=", mail], ["Password", "=", pwd]]);
         this.log.debug(JSON.stringify(rows));
         if (rows.length > 0) return rows[0];
         return null;
     }
+    /**
+     * return user by id
+     * @param id 
+     * @returns user or null if not found
+     */
     public async getAuth(id: number): Promise<Auth | null>
     {
-        const rows = await this.db.select<Auth>("Auth", ["Id", "=", id]);
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const rows = await db.select<Auth>("Auth", ["Id", "=", id]);
         if (rows.length > 0) return rows[0];
         return null;
     }
-
+    /**
+     * return user by email
+     * @param mail email
+     * @returns user or null if not found
+     */
     public async getAuthByEmail(mail: string): Promise<Auth | null>
     {
-        const rows = await this.db.select<Auth>("Auth", ["Email", "=", mail]);
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const rows = await db.select<Auth>("Auth", ["Email", "=", mail]);
         if (rows.length > 0) return rows[0];
         return null;
     }
-
-    public async updateAuthPassword(auth: Auth, pwd: string): Promise<Auth | null>
+    /**
+     * update user password
+     * @param id  id of user
+     * @param pwd  new password
+     * @returns  true if ok, false if not
+     */
+    public async updatePassword(id: number, pwd: string): Promise<boolean | null>
     {
-        auth.Password = pwd;
-        const toUpdate = this.db.getSetValues<Auth>(auth);
-        const response = await this.db.update<Auth>(toUpdate, ["Id", "=", auth.Id], "Auth");
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const response = await db.update<Auth>([["Password", pwd]], ["Id", "=", id], "Auth");
         if (response)
         {
-            return auth;
+            return true;
         }
-        return null;
+        return false;
     }
-
+    /**
+     * add new user
+     * @param user
+     * @returns id of new user or null if not found
+     */
     public async createUser(user: Auth): Promise<number | null>
     {
-        const response = await this.db.insert<Auth>(user, "Auth");
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const response = await db.insert<Auth>(user, "Auth");
         if (response)
         {
             return response;

@@ -6,9 +6,9 @@ import clc from "cli-color";
 export class Logger implements ILogger
 {
     public IS_DEBUG: boolean;
-    public constructor()
+    public constructor(isDev: boolean = false)
     {
-        this.IS_DEBUG = _IS_DEVELOPMENT_;
+        this.IS_DEBUG = isDev;
     }
 
     private _dateTime(): string
