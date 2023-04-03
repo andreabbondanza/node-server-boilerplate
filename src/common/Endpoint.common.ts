@@ -7,6 +7,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 export class Endpoint
 {
     private server: Express;
+    private _handlers: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>[] = [];
     private _route: Route;
     /**
      * Get endpoint route object
@@ -33,6 +34,17 @@ export class Endpoint
     public endpoint(endpoint: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
     {
         this.server[this._route.method](this._route.path, endpoint);
+        return this;
+    }
+
+    /**
+    * Previous endpoint content
+    * @param handler endpoint content
+    * @returns 
+    */
+    public handler(middleware: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
+    {
+        this._handlers.push(middleware);
         return this;
     }
 }
