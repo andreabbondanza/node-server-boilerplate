@@ -223,7 +223,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                                     await emailservice.sendEmailPassword(vemail, pwd);
                                     response.Data = "Password Resettata";
                                     response.Message = "Password Resettata"
-                                    res.redirect(`https://${this.env.configHost.server.host}:${this.env.configHost.server.port}/login?message=Password Resettata`)
+                                    res.redirect(`https://${this.env.configHost.server[0].host}:${this.env.configHost.server[0].port}/login?message=Password Resettata`)
                                 }
                                 else
                                 {

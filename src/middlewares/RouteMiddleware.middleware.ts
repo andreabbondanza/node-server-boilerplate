@@ -1,11 +1,10 @@
 import { ParsedQs } from "qs";
-import { RequestHandler, response, Router } from "express";
+import { RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getRoute, initSR } from "../common/Utils.common";
 import { AppEnvironment } from "../AppEnvironment";
 import { IAuthToken } from "../interfaces/IAuthToken.interface";
-import { Route } from "../common/Routes.common";
 
 
 export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>

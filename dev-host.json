@@ -1,8 +1,8 @@
 {
-    "server": {
+    "server": [{
         "host": "localhost",
         "port": 21117
-    },
+    }],
     "app": {
         "secret": "secret",
         "apikey": "",

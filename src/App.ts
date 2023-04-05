@@ -91,7 +91,7 @@ export class App
      * @param listenCallback 
      */
 
-    public listen(listenCallback: (config: AppEnvironment) => void)
+    public listen(listenCallback: (config: AppEnvironment, host: string, port: number) => void)
     {
         const log = this._env.logger;
         this.loadRepositories();
@@ -113,10 +113,14 @@ export class App
             log.log("");
         }
         log.info("End Endpoint Configuration ------------------------------------------");
-        this._env.server.listen(
-            this._env.configHost.server.port,
-            this._env.configHost.server.host,
-            () => { listenCallback(this._env) });
+        for (const configServer of this._env.configHost.server)
+        {
+            this._env.server.listen(
+                configServer.port,
+                configServer.host,
+                () => { listenCallback(this._env, configServer.host, configServer.port) });
+
+        }
     }
 
 }

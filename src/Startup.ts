@@ -33,8 +33,8 @@ server
             env.logger.debug(env.logger.evidence("ENDS MIDDLEWARES------------------------------\n"));
             next();
         })
-    .listen((env) =>
+    .listen((env, host, port) =>
     {
-        env.logger.log("listening on " + env.logger.evidence(env.configHost.server.port.toString()))
+        env.logger.log(`listening ${host} on port ${env.logger.evidence(port.toString())}`)
     })
 
