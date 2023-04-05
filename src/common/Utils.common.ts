@@ -1,7 +1,8 @@
 import { IController } from "../interfaces/IController.interface";
 import { IRouteIndex } from "../interfaces/IRouteIndex.interfaces";
 import { IStandardResponse, StandardResponseOptions } from "../interfaces/IStandardResponse.interface";
-import { Method, Route } from "./Routes.common";
+import { Method } from "./Methods.common";
+import { Route } from "./Routes.common";
 
 /**
  * Return all the methods of a controller (except the constructor and the ones that start with _)
