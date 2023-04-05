@@ -5,6 +5,7 @@
     },
     "app": {
         "secret": "secret",
+        "apikey": "",
         "name": "Site Name",
         "baseApiPath": "/api/v1"
     },
