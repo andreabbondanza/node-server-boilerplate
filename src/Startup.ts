@@ -6,6 +6,7 @@ import { AppEnvironment } from "./AppEnvironment";
 import { log } from "./middlewares/Log.middleware";
 import { _IS_DEVELOPMENT_ } from "./common/Globals.common";
 import cors from "cors";
+import { apiKeyCheckMiddleware } from "./middlewares/ApiKeyCheckMiddleware";
 
 init();
 
@@ -25,6 +26,7 @@ server
             next();
         },
         log,
+        apiKeyCheckMiddleware,
         routeMiddleware,
         (env: AppEnvironment) => (req, res, next) =>
         {
