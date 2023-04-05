@@ -9,8 +9,9 @@ import { IAuthToken } from "../interfaces/IAuthToken.interface";
 import { Logger } from "../common/Logger.common";
 import { Service } from "../common/Service.common";
 import { Roles } from "../shared/Auth.model";
-import { Method, Route } from "./Routes.common";
+import { Route } from "./Routes.common";
 import { Endpoint } from "./Endpoint.common";
+import { Method } from "./Methods.common";
 
 
 export class Controller implements IController
@@ -21,7 +22,7 @@ export class Controller implements IController
         return this._env;
     }
     protected server: Express;
-    protected baseApiPath: string = "/api/v1/";
+    protected baseApiPath: string = "/api/";
     protected controllerPath: string = "";
     private _log: Logger;
     protected get log(): Logger
@@ -66,7 +67,7 @@ export class Controller implements IController
      * @param method http method
      * @returns the route object
      */
-    public _buildRoute(path: string, roles: Roles[], method: Method = "get", pathRegex?: RegExp): Route
+    public _buildRoute(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}, pathRegex?: RegExp): Route
     {
         let stringToTest = pathRegex?.source;
         let endingTest = / /;
@@ -82,7 +83,8 @@ export class Controller implements IController
             this._buildPath(path),
             roles,
             test,
-            method
+            method,
+            custom
         );
         return route;
     }
@@ -94,9 +96,9 @@ export class Controller implements IController
      * @param method endopint method
      * @returns endpoint object
      */
-    public _registerEndpoint(path: string, roles: Roles[], method: Method = "get"): Endpoint
+    public _registerEndpoint(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Endpoint
     {
-        return new Endpoint(this.server, this._buildRoute(path, roles, method));
+        return new Endpoint(this.server, this._buildRoute(path, roles, method, custom));
     }
 
     /**
