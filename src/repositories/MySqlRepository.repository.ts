@@ -1,10 +1,10 @@
-import { IConfigDb } from "../interfaces/IConfigDb.interface";
+import { IConfigDb } from "../interfaces/IConfigDb.interface.js";
 import { createConnection, Connection, ResultSetHeader } from "mysql2/promise";
-import { _DB_TABLES_ as DB_TABLES } from "../common/Globals.common";
-import { AppEnvironment } from "../AppEnvironment";
-import { Logger } from "../common/Logger.common";
-import { GenericModel } from "../shared/Generic.model";
-import { Repository } from "../common/Repository.common";
+import { _DB_TABLES_ as DB_TABLES } from "../common/Globals.common.js";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { Logger } from "../common/Logger.common.js";
+import { GenericModel } from "../model/Generic.model.js";
+import { Repository } from "../common/Repository.common.js";
 
 export class MYSqlRepository extends Repository
 {

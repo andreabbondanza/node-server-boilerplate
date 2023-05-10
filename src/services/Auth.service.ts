@@ -1,11 +1,13 @@
-import { Service } from "../common/Service.common";
-import { Auth } from "../shared/Auth.model";
-import { sign } from 'jsonwebtoken';
+import { Service } from "../common/Service.common.js";
+import { Auth } from "../model/Auth.model.js";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+
 import { DateTime } from 'luxon';
-import { IAuthToken } from '../interfaces/IAuthToken.interface';
-import { IRefreshToken } from '../interfaces/IRefreshToken.interface';
-import { LoginResponse } from "../shared/LoginResponse.model";
-import { MYSqlRepository } from "../repositories/MySqlRepository.repository";
+import { IAuthToken } from '../interfaces/IAuthToken.interface.js';
+import { IRefreshToken } from '../interfaces/IRefreshToken.interface.js';
+import { LoginResponse } from "../model/LoginResponse.model.js";
+import { MYSqlRepository } from "../repositories/MySqlRepository.repository.js";
 
 export class AuthService extends Service
 {
@@ -18,6 +20,7 @@ export class AuthService extends Service
      */
     public tokenGeneration(user: Auth, secret: string): LoginResponse
     {
+        const {sign} = jwt;
         const _tokenExpDays: number = this.env.isDev ? 500 : 3;
         const data: IAuthToken = {
             id: user.Id,

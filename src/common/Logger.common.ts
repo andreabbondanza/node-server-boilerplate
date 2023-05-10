@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
-import { _IS_DEVELOPMENT_ } from "../common/Globals.common";
+import { _IS_DEVELOPMENT_ } from "../common/Globals.common.js";
 import { appendFileSync } from "fs";
-import { ILogger } from "../interfaces/ILogger.interface";
+import { ILogger } from "../interfaces/ILogger.interface.js";
 import clc from "cli-color";
 export class Logger implements ILogger
 {

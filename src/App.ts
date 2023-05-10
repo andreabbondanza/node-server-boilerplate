@@ -3,12 +3,12 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { ParsedQs } from "qs";
-import { IConfigHost } from "./interfaces/IConfigHost.interface";
-import { AppEnvironment } from "./AppEnvironment";
-import { getMethods } from "./common/Utils.common";
-import { IControllerTuple } from "./interfaces/IControllerTuple.interface";
+import { IConfigHost } from "./interfaces/IConfigHost.interface.js";
+import { AppEnvironment } from "./AppEnvironment.js";
+import { getMethods } from "./common/Utils.common.js";
+import { IControllerTuple } from "./interfaces/IControllerTuple.interface.js";
 
-import { Route, Routes } from "./common/Routes.common";
+import { Route, Routes } from "./common/Routes.common.js";
 
 
 export class App
@@ -54,13 +54,13 @@ export class App
     /**
     * Load all controllers from controllers folder
     */
-    private loadControllers(): IControllerTuple[]
+    private async loadControllers(): Promise<IControllerTuple[]>
     {
         const result: IControllerTuple[] = [];
         const controllers = readdirSync("./controllers").where(x => x.endsWith(".controller.js"));
         for (const controller of controllers)
         {
-            const currController = require("./" + join("./controllers", controller));
+            const currController = await import("./" + join("./controllers", controller));
             const name = Object.keys(currController)[0];
             result.push({
                 controllerClass: currController,
@@ -74,16 +74,15 @@ export class App
      * Load all repositories from repositories folder
      */
 
-    private loadRepositories(): void
+    private async loadRepositories(): Promise<void>
     {
         const repos = readdirSync("./repositories").where(x => x.endsWith(".repository.js"));
         for (const repo of repos)
         {
-            const currRepo = require("./" + join("./repositories", repo));
+            const currRepo = await import("./" + join("./repositories", repo));
             const name = Object.keys(currRepo)[0];
             this._env.pushRepository(name, new (currRepo[name])(this._env.configHost, this._env.logger));    
-        }
-        
+        }        
     }
 
     /**
@@ -91,11 +90,11 @@ export class App
      * @param listenCallback 
      */
 
-    public listen(listenCallback: (config: AppEnvironment, host: string, port: number) => void)
+    public async listen(listenCallback: (config: AppEnvironment, host: string, port: number) => void)
     {
         const log = this._env.logger;
         this.loadRepositories();
-        const controllers = this.loadControllers();
+        const controllers = await this.loadControllers();
         log.info("Start Endpoint Configuration ------------------------------------------ \n");
         for (const controller of controllers)
         {

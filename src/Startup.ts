@@ -1,14 +1,14 @@
-import { App } from "./App";
+import { App } from "./App.js";
 import express from "express";
-import init from "dewlinq";
-import { routeMiddleware } from "./middlewares/RouteMiddleware.middleware";
-import { AppEnvironment } from "./AppEnvironment";
-import { log } from "./middlewares/Log.middleware";
-import { _IS_DEVELOPMENT_ } from "./common/Globals.common";
+import dewlinq from "dewlinq";
+import { routeMiddleware } from "./middlewares/RouteMiddleware.middleware.js";
+import { AppEnvironment } from "./AppEnvironment.js";
+import { log } from "./middlewares/Log.middleware.js";
+import { _IS_DEVELOPMENT_ } from "./common/Globals.common.js";
 import cors from "cors";
-import { apiKeyCheckMiddleware } from "./middlewares/ApiKeyCheckMiddleware";
+import { apiKeyCheckMiddleware } from "./middlewares/ApiKeyCheckMiddleware.js";
 
-init();
+dewlinq.default();
 
 
 const server = new App(express(), _IS_DEVELOPMENT_);

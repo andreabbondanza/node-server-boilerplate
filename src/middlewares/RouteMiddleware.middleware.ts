@@ -1,16 +1,18 @@
 import { ParsedQs } from "qs";
 import { RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
-import { JwtPayload, verify } from "jsonwebtoken";
-import { getRoute, initSR } from "../common/Utils.common";
-import { AppEnvironment } from "../AppEnvironment";
-import { IAuthToken } from "../interfaces/IAuthToken.interface";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { getRoute, initSR } from "../common/Utils.common.js";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { IAuthToken } from "../interfaces/IAuthToken.interface.js";
 
 
 export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>
 {
     return (req, res, next) =>
     {
+        const { verify } = jwt;
         // if (/api\/v[0-9]+\/public/.test(req.path))
         const path = getRoute(env.routes, req.path, req.method);
         const response = initSR();

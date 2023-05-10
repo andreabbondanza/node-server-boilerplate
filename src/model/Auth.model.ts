@@ -1,4 +1,4 @@
-import { GenericModel } from "./Generic.model";
+import { GenericModel } from "./Generic.model.js";
 
 export class Auth extends GenericModel
 {
@@ -15,8 +15,8 @@ export type Roles = "admin" | "customer" | "public";
 
 export class AuthToken
 {
-    id: number;
-    name: string;
-    role: Roles;
-    exp: number;
+    id: number = 0;
+    name: string = "";
+    role: Roles = "public";
+    exp: number = 0;
 }

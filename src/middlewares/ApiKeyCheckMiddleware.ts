@@ -1,8 +1,8 @@
 import { ParsedQs } from "qs";
 import { RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
-import { getRoute, initSR } from "../common/Utils.common";
-import { AppEnvironment } from "../AppEnvironment";
+import { getRoute, initSR } from "../common/Utils.common.js";
+import { AppEnvironment } from "../AppEnvironment.js";
 
 
 export function apiKeyCheckMiddleware(env: AppEnvironment): RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>

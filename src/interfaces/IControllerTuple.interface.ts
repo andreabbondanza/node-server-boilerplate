@@ -1,4 +1,4 @@
-import { IController } from "./IController.interface";
+import { IController } from "./IController.interface.js";
 
 export interface IControllerTuple
 {

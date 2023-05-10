@@ -1,15 +1,16 @@
-import { JwtPayload, verify } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { DateTime } from "luxon";
 import crypto from "crypto";
-import { AppEnvironment } from "../AppEnvironment";
-import { Controller } from "../common/Controller.common";
-import { initSR, REGEX_EMAIL } from "../common/Utils.common";
-import { IStandardResponse } from "../interfaces/IStandardResponse.interface";
-import { Route } from "../common/Routes.common";
-import { AuthService } from "../services/Auth.service";
-import { EmailService } from "../services/EmailService.service";
-import { generate } from "generate-password";
-import { LoginResponse } from "../shared/LoginResponse.model";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { Controller } from "../common/Controller.common.js";
+import { initSR, REGEX_EMAIL } from "../common/Utils.common.js";
+import { IStandardResponse } from "../interfaces/IStandardResponse.interface.js";
+import { Route } from "../common/Routes.common.js";
+import { AuthService } from "../services/Auth.service.js";
+import { EmailService } from "../services/EmailService.service.js";
+import generator from "easy-password-gen";
+import { LoginResponse } from "../model/LoginResponse.model.js";
 
 /**
  * NOTE: ALl methods that start with _ will not be "ROUTED" at server startup
@@ -106,6 +107,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
             .endpoint(
                 async (req, res) =>
                 {
+                    const { verify } = jwt;
                     const response: IStandardResponse<LoginResponse> = initSR();
                     try
                     {
@@ -189,6 +191,7 @@ import { LoginResponse } from "../shared/LoginResponse.model";
             .endpoint(
                 async (req, res) =>
                 {
+                    const { verify } = jwt;
                     const response: IStandardResponse<string> = initSR();
                     try
                     {
@@ -206,12 +209,11 @@ import { LoginResponse } from "../shared/LoginResponse.model";
                         {
                             const authService = this._initService<AuthService>(new AuthService());
                             const auth = await authService.getAuthByEmail(vemail);
-                            const pwd = generate({
+                            const pwd = generator({
                                 length: 10,
                                 uppercase: true,
                                 numbers: true,
-                                symbols: false,
-                                excludeSimilarCharacters: true
+                                symbols: false
                             });
                             const hash = crypto.createHash(this.env.configHost.encryption.algorithm).update(pwd).digest(this.env.configHost.encryption.encoding)
 

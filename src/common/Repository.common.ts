@@ -1,7 +1,7 @@
-import { AppEnvironment } from "../AppEnvironment";
-import { IConfigHost } from "../interfaces/IConfigHost.interface";
-import { IRepository } from "../interfaces/IRepository";
-import { Logger } from "./Logger.common";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { IConfigHost } from "../interfaces/IConfigHost.interface.js";
+import { IRepository } from "../interfaces/IRepository.interface.js";
+import { Logger } from "./Logger.common.js";
 
 export class Repository implements IRepository
 {
@@ -12,6 +12,5 @@ export class Repository implements IRepository
     {
         this._cfg = cfg;
         this._logger = logger;
-    }
-    
+    }   
 }

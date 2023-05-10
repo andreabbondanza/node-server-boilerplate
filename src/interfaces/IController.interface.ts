@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { AppEnvironment } from "../AppEnvironment";
+import { AppEnvironment } from "../AppEnvironment.js";
 
 export interface IController
 {

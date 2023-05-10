@@ -1,4 +1,4 @@
-import { Route } from "../common/Routes.common";
+import { Route } from "../common/Routes.common.js";
 
 export interface IRouteIndex
 {

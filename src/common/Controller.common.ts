@@ -1,17 +1,17 @@
 
 
-import { IController } from "../interfaces/IController.interface";
+import { IController } from "../interfaces/IController.interface.js";
 import { Express, Request, RequestHandler } from "express";
-import { AppEnvironment } from "../AppEnvironment";
-import { IService } from "../interfaces/IService.interface";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { IService } from "../interfaces/IService.interface.js";
 import { ParsedQs } from "qs";
-import { IAuthToken } from "../interfaces/IAuthToken.interface";
-import { Logger } from "../common/Logger.common";
-import { Service } from "../common/Service.common";
-import { Roles } from "../shared/Auth.model";
-import { Route } from "./Routes.common";
-import { Endpoint } from "./Endpoint.common";
-import { Method } from "./Methods.common";
+import { IAuthToken } from "../interfaces/IAuthToken.interface.js";
+import { Logger } from "../common/Logger.common.js";
+import { Service } from "../common/Service.common.js";
+import { Roles } from "../model/Auth.model.js";
+import { Route } from "./Routes.common.js";
+import { Endpoint } from "./Endpoint.common.js";
+import { Method } from "./Methods.common.js";
 
 
 export class Controller implements IController

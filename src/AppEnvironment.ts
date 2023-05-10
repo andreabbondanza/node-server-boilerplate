@@ -1,10 +1,10 @@
-import { IConfigHost } from "./interfaces/IConfigHost.interface";
+import { IConfigHost } from "./interfaces/IConfigHost.interface.js";
 import { readFileSync } from "fs";
 import { Express } from "express";
-import { Logger } from "./common/Logger.common";
-import { IRouteIndex } from "./interfaces/IRouteIndex.interfaces";
-import { Route } from "./common/Routes.common";
-import { IRepository } from "./interfaces/IRepository";
+import { Logger } from "./common/Logger.common.js";
+import { IRouteIndex } from "./interfaces/IRouteIndex.interface.js";
+import { Route } from "./common/Routes.common.js";
+import { IRepository } from "./interfaces/IRepository.interface.js";
 
 export class AppEnvironment
 {
@@ -25,9 +25,9 @@ export class AppEnvironment
         this._routes[route.path + "-" + route.method] = route;
     }
     /**
-     * Add a new repository
+     * Add a new repository.js"
      * @param key repokey (usually class name)
-     * @param repo repository instance
+     * @param repo repository.js" instance
      */
     public pushRepository(key: string, repo: IRepository)
     {
@@ -35,9 +35,9 @@ export class AppEnvironment
     }
 
     /**
-     * Get a repository instance
-     * @param key repository key
-     * @returns repository instance 
+     * Get a repository.js" instance
+     * @param key repository.js" key
+     * @returns repository.js" instance 
      */
 
     public getRepository<T extends IRepository>(key: string): T

@@ -1,8 +1,8 @@
-import { IController } from "../interfaces/IController.interface";
-import { IRouteIndex } from "../interfaces/IRouteIndex.interfaces";
-import { IStandardResponse, StandardResponseOptions } from "../interfaces/IStandardResponse.interface";
-import { Method } from "./Methods.common";
-import { Route } from "./Routes.common";
+import { IController } from "../interfaces/IController.interface.js";
+import { IRouteIndex } from "../interfaces/IRouteIndex.interface.js";
+import { IStandardResponse, StandardResponseOptions } from "../interfaces/IStandardResponse.interface.js";
+import { Method } from "./Methods.common.js";
+import { Route } from "./Routes.common.js";
 
 /**
  * Return all the methods of a controller (except the constructor and the ones that start with _)

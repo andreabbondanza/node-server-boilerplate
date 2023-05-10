@@ -1,4 +1,4 @@
-import { AppEnvironment } from "../AppEnvironment";
+import { AppEnvironment } from "../AppEnvironment.js";
 
 export interface IService
 {

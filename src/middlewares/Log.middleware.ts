@@ -1,7 +1,7 @@
 import { ParsedQs } from "qs";
 import { RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
-import { AppEnvironment } from "../AppEnvironment";
+import { AppEnvironment } from "../AppEnvironment.js";
 import { DateTime } from "luxon";
 
 

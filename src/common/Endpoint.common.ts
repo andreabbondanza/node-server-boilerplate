@@ -1,6 +1,6 @@
 import { Express, RequestHandler } from "express";
 import { ParsedQs } from "qs";
-import { Route } from "./Routes.common";
+import { Route } from "./Routes.common.js";
 import { ParamsDictionary } from "express-serve-static-core";
 
 

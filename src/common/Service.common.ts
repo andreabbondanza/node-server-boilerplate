@@ -1,10 +1,10 @@
-import { AppEnvironment } from "../AppEnvironment";
-import { ErrorServiceInit } from "../errors/ErrorServiceInit.error";
-import { IService } from "../interfaces/IService.interface";
-import { MYSqlRepository } from "../repositories/MySqlRepository.repository";
-import { Logger } from "../common/Logger.common";
-import { FileRepository } from "../repositories/FileRepository.repository";
-import { IRepository } from "../interfaces/IRepository";
+import { AppEnvironment } from "../AppEnvironment.js";
+import { ErrorServiceInit } from "../errors/ErrorServiceInit.error.js";
+import { IService } from "../interfaces/IService.interface.js";
+import { MYSqlRepository } from "../repositories/MySqlRepository.repository.js";
+import { Logger } from "../common/Logger.common.js";
+import { FileRepository } from "../repositories/FileRepository.repository.js";
+import { IRepository } from "../interfaces/IRepository.interface.js";
 
 export class Service implements IService
 {

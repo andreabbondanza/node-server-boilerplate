@@ -1,6 +1,6 @@
-import { Service } from "../common/Service.common"
+import { Service } from "../common/Service.common.js"
 import { createTransport } from "nodemailer";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { DateTime } from "luxon";
 
 
@@ -9,6 +9,7 @@ export class EmailService extends Service
 {
     public async sendEmailRecovery(email: string)
     {
+        const { sign } = jwt;
         const transporter = createTransport({
             host: this.env.configHost.email.host,
             port: this.env.configHost.email.port,
@@ -29,6 +30,7 @@ export class EmailService extends Service
 
     public async sendEmailPassword(email: string, password: string)
     {
+        const { sign } = jwt;
         const transporter = createTransport({
             host: this.env.configHost.email.host,
             port: this.env.configHost.email.port,

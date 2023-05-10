@@ -1,5 +1,5 @@
-import { IConfigDb } from "./IConfigDb.interface";
-import { IConfigEmail } from "./IConfigMail.interface";
+import { IConfigDb } from "./IConfigDb.interface.js";
+import { IConfigEmail } from "./IConfigMail.interface.js";
 
 export interface IConfigHost
 {
