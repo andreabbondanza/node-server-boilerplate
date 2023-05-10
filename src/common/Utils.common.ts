@@ -46,5 +46,15 @@ export function initSR<T>(data: StandardResponseOptions = { Data: "", Message: "
   return d;
 }
 
+/**
+ * Escape for regexp
+ * @param string input string
+ * @returns escaped string
+ */
+export function escapeRegExp(string: string)
+{
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export const REGEX_EMAIL = /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$/;
 export const REGEX_PASS = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
