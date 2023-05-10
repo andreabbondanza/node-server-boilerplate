@@ -12,6 +12,7 @@ import { Roles } from "../model/Auth.model.js";
 import { Route } from "./Routes.common.js";
 import { Endpoint } from "./Endpoint.common.js";
 import { Method } from "./Methods.common.js";
+import { escapeRegExp } from "./Utils.common.js";
 
 
 export class Controller implements IController
@@ -76,8 +77,8 @@ export class Controller implements IController
             stringToTest = path.replace(/:(\w+)/gi, "[A-z0-9\-\@\.]+")
             endingTest = /\/{0,1}$/;
         }
-        const baseRegexp: RegExp = /\/api\/v[0-9]+\//;
-        const controllerRegexp: RegExp = new RegExp(`${this.controllerPath}`);
+        const baseRegexp: RegExp = new RegExp(`${escapeRegExp(this.baseApiPath)}`);
+        const controllerRegexp: RegExp = new RegExp(`${escapeRegExp(this.controllerPath)}`);
         const test: RegExp = new RegExp(baseRegexp.source + controllerRegexp.source + stringToTest + endingTest.source);
         const route: Route = new Route(
             this._buildPath(path),
