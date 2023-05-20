@@ -36,6 +36,19 @@ export class Endpoint
         this.server[this._route.method](this._route.path, endpoint);
         return this;
     }
+    /**
+     * Add custom data to endpoint's route
+     * @param custom custom data
+     * @returns the endpoint
+     */
+    public addCustom(custom: { [key: string]: string | boolean }): Endpoint
+    {
+        for (const iterator of Object.keys(custom))
+        {
+            this.route.custom[iterator] = custom[iterator];
+        }
+        return this;
+    }
 
     /**
     * Previous endpoint content

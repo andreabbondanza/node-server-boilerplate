@@ -1,12 +1,12 @@
 export interface IStandardResponse<T>
 {
-    Message: string;
-    Data: T;
-    Error: { Num: number; Desc: string; }
+    message: string;
+    data: T;
+    error: { num: number; desc: string; }
 }
 
 export type StandardResponseOptions =
-    { Message: string, Error: { Desc: string, Num: number } } |
-    { Message: string } |
-    { Message: string, Data: any, Error: { Desc: string, Num: number } } |
-    { Message: string, Data: any }; 
+    { message: string, error: { desc: string, num: number } } |
+    { message: string } |
+    { message: string, data: any, error: { error: string, num: number } } |
+    { message: string, data: any }; 

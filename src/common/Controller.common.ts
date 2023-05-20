@@ -8,7 +8,7 @@ import { ParsedQs } from "qs";
 import { IAuthToken } from "../interfaces/IAuthToken.interface.js";
 import { Logger } from "../common/Logger.common.js";
 import { Service } from "../common/Service.common.js";
-import { Roles } from "../model/Auth.model.js";
+import { Roles } from "../models/Auth.model.js";
 import { Route } from "./Routes.common.js";
 import { Endpoint } from "./Endpoint.common.js";
 import { Method } from "./Methods.common.js";
@@ -30,7 +30,7 @@ export class Controller implements IController
     {
         return this._log;
     }
-    
+
     /**
      * Help to build path
      * @param path path to add to the base
@@ -64,19 +64,14 @@ export class Controller implements IController
      * Create routing object
      * @param path The path
      * @param roles routing roles
-     * @param pathRegex regex for path
      * @param method http method
+     * @param custom custom data
      * @returns the route object
      */
-    public _buildRoute(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}, pathRegex?: RegExp): Route
+    public _buildRoute(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Route
     {
-        let stringToTest = pathRegex?.source;
-        let endingTest = / /;
-        if (!pathRegex)
-        {
-            stringToTest = path.replace(/:(\w+)/gi, "[A-z0-9\-\@\.]+")
-            endingTest = /\/{0,1}$/;
-        }
+        const stringToTest = path.replace(/:(\w+)/gi, "[A-z0-9\-\@\.]+")
+        const endingTest = /\/{0,1}$/;
         const baseRegexp: RegExp = new RegExp(`${escapeRegExp(this.baseApiPath)}`);
         const controllerRegexp: RegExp = new RegExp(`${escapeRegExp(this.controllerPath)}`);
         const test: RegExp = new RegExp(baseRegexp.source + controllerRegexp.source + stringToTest + endingTest.source);

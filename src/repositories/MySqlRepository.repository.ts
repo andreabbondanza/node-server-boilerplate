@@ -3,7 +3,7 @@ import { createConnection, Connection, ResultSetHeader } from "mysql2/promise";
 import { _DB_TABLES_ as DB_TABLES } from "../common/Globals.common.js";
 import { AppEnvironment } from "../AppEnvironment.js";
 import { Logger } from "../common/Logger.common.js";
-import { GenericModel } from "../model/Generic.model.js";
+import { GenericModel } from "../models/Generic.model.js";
 import { Repository } from "../common/Repository.common.js";
 
 export class MYSqlRepository extends Repository

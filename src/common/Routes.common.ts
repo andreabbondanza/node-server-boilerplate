@@ -1,5 +1,5 @@
 import { IRouteIndex } from "../interfaces/IRouteIndex.interface.js";
-import { Roles } from "../model/Auth.model.js";
+import { Roles } from "../models/Auth.model.js";
 import { Method } from "./Methods.common.js";
 
 export const Routes: IRouteIndex = {};

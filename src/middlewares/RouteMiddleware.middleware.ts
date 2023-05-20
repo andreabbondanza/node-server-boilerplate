@@ -40,8 +40,8 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                             next();
                         else
                         {
-                            response.Error.Desc = "Forbidden resource";
-                            response.Message = "Non hai i permessi";
+                            response.error.desc = "Forbidden resource";
+                            response.message = "Non hai i permessi";
                             env.logger.debug("\n");
                             // tutto il resto
                             return res.status(401).send(response);
@@ -51,15 +51,15 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                         const err = error as any;
                         if (err.name === "TokenExpiredError")
                         {
-                            response.Error.Desc = err.message;
-                            response.Message = "Token expired";
+                            response.error.desc = err.message;
+                            response.message = "Token expired";
                             //token expired, ask for refresh
                             return res.header("x-refresh", "1").status(401).send(response);
                         }
                         env.logger.debug(err.name);
                         env.logger.debug(err.message);
-                        response.Error.Desc = err.message;
-                        response.Message = "Invalid token";
+                        response.error.desc = err.message;
+                        response.message = "Invalid token";
                         env.logger.debug("\n");
                         // all other errors
                         return res.status(401).send(response);
@@ -69,8 +69,8 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                 else
                 {
                     env.logger.debug("\n");
-                    response.Error.Desc = "No token provided";
-                    response.Message = "No token provided";
+                    response.error.desc = "No token provided";
+                    response.message = "No token provided";
                     return res.status(401).send(response);
                 }
                 env.logger.debug("\n");
@@ -79,8 +79,8 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
         else
         {
             env.logger.debug("\n");
-            response.Error.Desc = "Page not found";
-            response.Message = "Url not found";
+            response.error.desc = "Page not found";
+            response.message = "Url not found";
             return res.status(404).send(response)
         }
 

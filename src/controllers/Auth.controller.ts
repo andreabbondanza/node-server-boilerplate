@@ -10,7 +10,7 @@ import { Route } from "../common/Routes.common.js";
 import { AuthService } from "../services/Auth.service.js";
 import { EmailService } from "../services/EmailService.service.js";
 import generator from "easy-password-gen";
-import { LoginResponse } from "../model/LoginResponse.model.js";
+import { LoginResponse } from "../models/LoginResponse.model.js";
 
 /**
  * NOTE: ALl methods that start with _ will not be "ROUTED" at server startup
@@ -41,19 +41,19 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                         const user = await pservice.getAuthByEmail(mail);
                         if (user)
                         {
-                            response.Message = "Email già presente";
-                            response.Data = true;
+                            response.message = "Email già presente";
+                            response.data = true;
                             res.send(response);
                         }
                         else
                         {
-                            response.Data = false;
+                            response.data = false;
                             res.status(200).send(response);
                         }
                     } catch (err)
                     {
                         this.log.fileLog(JSON.stringify(err));
-                        response.Error.Desc = (err as any).message;
+                        response.error.desc = (err as any).message;
                         res.status(500).send(response);
                     }
                 }).route;
@@ -76,26 +76,26 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                         const secret = this.env.configHost.app.secret;
                         const body = req.body;
 
-                        if (!body) return res.status(400).send(initSR({ Message: "Invalid body", Error: { Num: 400, Desc: "Body unsupported" } }));
-                        if (!body.email || !REGEX_EMAIL.test(body.email)) return res.status(400).send(initSR({ Message: "Invalid email", Error: { Num: 400, Desc: "Bad Email" } }));
-                        if (!body.pwd) return res.status(400).send(initSR({ Message: "Invalid password", Error: { Num: 400, Desc: "Bad Password" } }));
+                        if (!body) return res.status(400).send(initSR({ message: "Invalid body", error: { num: 400, desc: "Body unsupported" } }));
+                        if (!body.email || !REGEX_EMAIL.test(body.email)) return res.status(400).send(initSR({ message: "Invalid email", error: { num: 400, desc: "Bad Email" } }));
+                        if (!body.pwd) return res.status(400).send(initSR({ message: "Invalid password", error: { num: 400, desc: "Bad Password" } }));
                         const pwd: string = body.pwd;
                         const hash = crypto.createHash(this.env.configHost.encryption.algorithm).update(pwd.trim()).digest(this.env.configHost.encryption.encoding);
                         const user = await authService.login(body.email, hash);
                         if (user)
                         {
-                            response.Data = authService.tokenGeneration(user, secret);
+                            response.data = authService.tokenGeneration(user, secret);
                             res.status(200).send(response);
                         }
                         else
                         {
-                            response.Message = "User not found";
+                            response.message = "User not found";
                             res.status(404).send(response);
                         }
                     } catch (err)
                     {
                         this.log.fileLog(JSON.stringify(err));
-                        response.Error.Desc = (err as any).message;
+                        response.error.desc = (err as any).message;
                         res.status(500).send(response);
                     }
                 }).route;
@@ -123,7 +123,7 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
 
                             if (user)
                             {
-                                response.Data = uservice.tokenGeneration(user, secret);
+                                response.data = uservice.tokenGeneration(user, secret);
                                 res.status(200).send(response);
                             }
 
@@ -132,20 +132,20 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                             const err = error as any;
                             if (err.name === "TokenExpiredError")
                             {
-                                response.Error.Desc = err.message;
-                                response.Message = "Token scaduto";
+                                response.error.desc = err.message;
+                                response.message = "Token scaduto";
                             }
                             if (err.name === "JsonWebTokenError")
                             {
-                                response.Error.Desc = err.message;
-                                response.Message = "Token non valido";
+                                response.error.desc = err.message;
+                                response.message = "Token non valido";
                             }
                             res.status(401).send(response);
                         }
 
                     } catch (err)
                     {
-                        response.Error.Desc = (err as any).message;
+                        response.error.desc = (err as any).message;
                         res.status(500).send(response);
                     }
                 }).route;
@@ -163,23 +163,23 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                         const emailservice = this._initService<EmailService>(new EmailService());
                         const authService = this._initService<AuthService>(new AuthService());
                         const mail = req.params.email;
-                        if (!mail || !REGEX_EMAIL.test(mail)) return res.status(400).send(initSR({ Message: "Email non valida", Error: { Num: 400, Desc: "Bad Email" } }));
+                        if (!mail || !REGEX_EMAIL.test(mail)) return res.status(400).send(initSR({ message: "Email non valida", error: { num: 400, desc: "Bad Email" } }));
                         const auth = await authService.getAuthByEmail(mail);
                         if (auth)
                         {
                             await emailservice.sendEmailRecovery(auth.Email);
-                            response.Message = "Email inviata";
+                            response.message = "Email inviata";
                             res.status(200).send(response)
                         }
                         else
                         {
-                            response.Message = "Utente non trovato";
+                            response.message = "Utente non trovato";
                             res.status(400).send(response);
                         }
                     } catch (err)
                     {
                         this.log.fileLog(JSON.stringify(err as any));
-                        response.Error.Desc = (err as any).message;
+                        response.error.desc = (err as any).message;
                         res.status(500).send(response);
                     }
                 }).route;
@@ -197,7 +197,7 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                     {
 
                         const emailservice = this._initService<EmailService>(new EmailService());
-                        if (!req.params.token) return res.status(400).send(initSR({ Message: "Dati non validi", Error: { Num: 400, Desc: "Token unsupported" } }));
+                        if (!req.params.token) return res.status(400).send(initSR({ message: "Dati non validi", error: { num: 400, desc: "Token unsupported" } }));
                         const verified = verify(req.params.token, this.env.configHost.app.secret) as JwtPayload;
 
                         const vdate = verified["expDate"]
@@ -223,13 +223,13 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                                 if (updated)
                                 {
                                     await emailservice.sendEmailPassword(vemail, pwd);
-                                    response.Data = "Password Resettata";
-                                    response.Message = "Password Resettata"
+                                    response.data = "Password Resettata";
+                                    response.message = "Password Resettata"
                                     res.redirect(`https://${this.env.configHost.server[0].host}:${this.env.configHost.server[0].port}/login?message=Password Resettata`)
                                 }
                                 else
                                 {
-                                    response.Message = "C'è un problema, riprova più tardi"
+                                    response.message = "C'è un problema, riprova più tardi"
                                 }
                             }
                             else
@@ -240,7 +240,7 @@ import { LoginResponse } from "../model/LoginResponse.model.js";
                     } catch (err)
                     {
                         this.log.fileLog(JSON.stringify(err as any));
-                        response.Error.Desc = (err as any).message;
+                        response.error.desc = (err as any).message;
                         res.status(500).send(response);
                     }
                 }).route;

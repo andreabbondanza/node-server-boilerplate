@@ -1,12 +1,12 @@
 import { Service } from "../common/Service.common.js";
-import { Auth } from "../model/Auth.model.js";
+import { Auth } from "../models/Auth.model.js";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
 import { DateTime } from 'luxon';
 import { IAuthToken } from '../interfaces/IAuthToken.interface.js';
 import { IRefreshToken } from '../interfaces/IRefreshToken.interface.js';
-import { LoginResponse } from "../model/LoginResponse.model.js";
+import { LoginResponse } from "../models/LoginResponse.model.js";
 import { MYSqlRepository } from "../repositories/MySqlRepository.repository.js";
 
 export class AuthService extends Service

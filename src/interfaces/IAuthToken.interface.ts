@@ -1,4 +1,4 @@
-import { Roles } from "../model/Auth.model.js";
+import { Roles } from "../models/Auth.model.js";
 
 export interface IAuthToken
 {

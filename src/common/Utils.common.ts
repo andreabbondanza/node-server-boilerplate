@@ -36,16 +36,14 @@ export function getRoute(routes: IRouteIndex, path: string, method: string): Rou
  * @param data standard response
  * @returns 
  */
-export function initSR<T>(data: StandardResponseOptions = { Data: "", Message: "", Error: { Num: 0, Desc: "" } }): IStandardResponse<T>
+export function initSR<T>(data: StandardResponseOptions = { data: "", message: "", error: { num: 0, desc: "" } }): IStandardResponse<T>
 {
-
   const d = data as any;
-  if (d["Data"] === undefined) d["Data"] = "";
-  if (d["Error"] === undefined) d["Error"] = { Num: 0, Desc: "" };
-  if (d["Message"] === undefined) d["Message"] = "";
+  if (d["data"] === undefined) d["data"] = "";
+  if (d["error"] === undefined) d["error"] = { num: 0, desc: "" };
+  if (d["message"] === undefined) d["message"] = "";
   return d;
 }
-
 /**
  * Escape for regexp
  * @param string input string
