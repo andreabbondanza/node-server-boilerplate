@@ -74,7 +74,16 @@ export class Controller implements IController
         const paths: IPath[] = [];
         for (const currPath of pathsString)
         {
-            const stringToTest = currPath.replace(/:[A-z0-9]+(\?)?/gi, "[A-z0-9\-\@\.]+")
+              const stringToTest = currPath.replace(/\/:[A-z0-9]+(\?)?/gi, (match, optional) =>
+            {
+                if (optional)
+                {
+                    return "(\/\[A-z0-9\\-\\@\\.]+)?";
+                } else
+                {
+                    return "\/[A-z0-9\\-\\@\\.]+";
+                }
+            });
             const endingTest = /\/{0,1}$/;
             const baseRegexp: RegExp = new RegExp(`${escapeRegExp(this.baseApiPath)}`);
             const controllerRegexp: RegExp = new RegExp(`${escapeRegExp(this.controllerPath)}`);
