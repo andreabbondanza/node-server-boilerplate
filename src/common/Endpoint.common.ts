@@ -33,7 +33,8 @@ export class Endpoint
      */
     public endpoint(endpoint: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
     {
-        this.server[this._route.method](this._route.path, endpoint);
+        const paths = this._route.paths.map((path) => path.path);
+        this.server.route(paths)[this._route.method](endpoint);
         return this;
     }
     /**

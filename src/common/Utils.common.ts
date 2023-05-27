@@ -26,7 +26,9 @@ export function getRoute(routes: IRouteIndex, path: string, method: string): Rou
   const keys = Object.keys(routes);
   for (const iterator of keys)
   {
-    if (routes[iterator].test.test(path) && routes[iterator].method.toLocaleLowerCase() as Method === method.toLocaleLowerCase())
+    if (routes[iterator].test(path) &&
+      routes[iterator].method.toLocaleLowerCase() as Method ===
+      method.toLocaleLowerCase())
       return routes[iterator];
   }
   return null;

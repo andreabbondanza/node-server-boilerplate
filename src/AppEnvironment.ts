@@ -22,7 +22,7 @@ export class AppEnvironment
      */
     public setRoute(route: Route)
     {
-        this._routes[route.path + "-" + route.method] = route;
+        this._routes[route.hash + "-" + route.method] = route;
     }
     /**
      * Add a new repository.js"

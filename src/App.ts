@@ -104,10 +104,10 @@ export class App
             {
                 const temp: any = controller.instance;
                 const path: Route = temp[method]();
-                if (path.path === undefined)
+                if (path.paths === undefined)
                     throw new Error(`Method ${method} in controller ${Object.keys(controller.controllerClass)[0]} is not a valid endpoint`);
                 this._env.setRoute(path);
-                log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's method ${log.evidence(path.method.toUpperCase())} and path: ${log.evidence(path.path)}`);
+                log.log(`${log.tab(1)}Initialzied ${log.evidence(method)} with endpoint's method ${log.evidence(path.method.toUpperCase())} and path: ${log.evidence(path.paths.map(x => x.path).join(", "))}`);
             }
             log.log("");
         }

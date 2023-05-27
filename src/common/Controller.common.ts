@@ -13,6 +13,7 @@ import { Route } from "./Routes.common.js";
 import { Endpoint } from "./Endpoint.common.js";
 import { Method } from "./Methods.common.js";
 import { escapeRegExp } from "./Utils.common.js";
+import { IPath } from "../interfaces/IPath.interface.js";
 
 
 export class Controller implements IController
@@ -36,11 +37,10 @@ export class Controller implements IController
      * @param path path to add to the base
      * @returns
      */
-    protected _buildPath(path: string)
+    protected _buildPath(path: string): string
     {
         return `${this.baseApiPath}${this.controllerPath}${path}`;
     }
-
     /**
      * Return user auth type
      * @param req request object
@@ -68,17 +68,22 @@ export class Controller implements IController
      * @param custom custom data
      * @returns the route object
      */
-    public _buildRoute(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Route
+    public _buildRoute(path: string | string[], roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Route
     {
-        const stringToTest = path.replace(/:(\w+)/gi, "[A-z0-9\-\@\.]+")
-        const endingTest = /\/{0,1}$/;
-        const baseRegexp: RegExp = new RegExp(`${escapeRegExp(this.baseApiPath)}`);
-        const controllerRegexp: RegExp = new RegExp(`${escapeRegExp(this.controllerPath)}`);
-        const test: RegExp = new RegExp(baseRegexp.source + controllerRegexp.source + stringToTest + endingTest.source);
+        const pathsString = Array.isArray(path) ? path : [path];
+        const paths: IPath[] = [];
+        for (const currPath of pathsString)
+        {
+            const stringToTest = currPath.replace(/:[A-z0-9]+(\?)?/gi, "[A-z0-9\-\@\.]+")
+            const endingTest = /\/{0,1}$/;
+            const baseRegexp: RegExp = new RegExp(`${escapeRegExp(this.baseApiPath)}`);
+            const controllerRegexp: RegExp = new RegExp(`${escapeRegExp(this.controllerPath)}`);
+            paths.push({ path: this._buildPath(currPath), test: new RegExp(baseRegexp.source + controllerRegexp.source + stringToTest + endingTest.source) });
+        }
+
         const route: Route = new Route(
-            this._buildPath(path),
+            paths,
             roles,
-            test,
             method,
             custom
         );
@@ -92,7 +97,7 @@ export class Controller implements IController
      * @param method endopint method
      * @returns endpoint object
      */
-    public _registerEndpoint(path: string, roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Endpoint
+    public _registerEndpoint(path: string | string[], roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Endpoint
     {
         return new Endpoint(this.server, this._buildRoute(path, roles, method, custom));
     }
