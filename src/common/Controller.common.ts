@@ -108,7 +108,7 @@ export class Controller implements IController
      */
     public _registerEndpoint(path: string | string[], roles: Roles[], method: Method = "get", custom: { [key: string]: string | boolean } = {}): Endpoint
     {
-        return new Endpoint(this.server, this._buildRoute(path, roles, method, custom));
+        return new Endpoint(this.server, this._env, this._buildRoute(path, roles, method, custom));
     }
 
     /**

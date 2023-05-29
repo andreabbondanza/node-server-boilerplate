@@ -2,12 +2,14 @@ import { Express, RequestHandler } from "express";
 import { ParsedQs } from "qs";
 import { Route } from "./Routes.common.js";
 import { ParamsDictionary } from "express-serve-static-core";
+import { AppEnvironment } from "../AppEnvironment.js";
 
 
 export class Endpoint
 {
     private server: Express;
-    private _handlers: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>[] = [];
+    private _env: AppEnvironment;
+    private _handlers: ((env: AppEnvironment) => RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>)[] = [];
     private _route: Route;
     /**
      * Get endpoint route object
@@ -21,9 +23,10 @@ export class Endpoint
      * @param server Express server
      * @param route Route object
      */
-    public constructor(server: Express, route: Route)
+    public constructor(server: Express, env: AppEnvironment, route: Route)
     {
         this._route = route;
+        this._env = env;
         this.server = server;
     }
     /**
@@ -34,7 +37,9 @@ export class Endpoint
     public endpoint(endpoint: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
     {
         const paths = this._route.paths.map((path) => path.path);
-        this.server.route(paths)[this._route.method](endpoint);
+        this.server.route(paths)[this._route.method](this._handlers.map(x => x(this._env)), endpoint);
+        //this.server.get(paths, this._handlers.map(x => x(this._env)), endpoint);
+        //this.server[this._route.method](this._route.path, endpoint);
         return this;
     }
     /**
@@ -56,7 +61,7 @@ export class Endpoint
     * @param handler endpoint content
     * @returns 
     */
-    public handler(middleware: RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
+    public handler(middleware: (env: AppEnvironment) => RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): Endpoint
     {
         this._handlers.push(middleware);
         return this;
