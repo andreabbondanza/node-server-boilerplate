@@ -38,8 +38,6 @@ export class Endpoint
     {
         const paths = this._route.paths.map((path) => path.path);
         this.server.route(paths)[this._route.method](this._handlers.map(x => x(this._env)), endpoint);
-        //this.server.get(paths, this._handlers.map(x => x(this._env)), endpoint);
-        //this.server[this._route.method](this._route.path, endpoint);
         return this;
     }
     /**
