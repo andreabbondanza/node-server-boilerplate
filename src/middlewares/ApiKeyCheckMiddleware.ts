@@ -32,8 +32,8 @@ export function apiKeyCheckMiddleware(env: AppEnvironment): RequestHandler<Param
                     response.error.desc = "Forbidden resource";
                     response.message = "You cannot access this resource";
                     env.logger.debug("\n");
-                    // tutto il resto
-                    return res.status(401).send(response);
+                    // all the rest
+                    res.status(401).send(response);
                 }
 
 
@@ -45,7 +45,7 @@ export function apiKeyCheckMiddleware(env: AppEnvironment): RequestHandler<Param
             env.logger.debug("\n");
             response.error.desc = "Page not found";
             response.message = "Url not found";
-            return res.status(404).send(response)
+            res.status(404).send(response)
         }
 
     }
