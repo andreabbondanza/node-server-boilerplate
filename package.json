@@ -1,5 +1,6 @@
 {
-  "name": "lombardi",
+  "name": "node-server-boilerplate",
+  "version": "1.0.0",
   "type": "module",
   "engines": {
     "node": ">=14.16"
