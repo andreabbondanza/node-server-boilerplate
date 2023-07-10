@@ -7,7 +7,7 @@
         "secret": "secret",
         "apikey": "",
         "name": "Site Name",
-        "baseApiPath": "/api/v1"
+        "baseApiPath": "/api/v1/"
     },
     "db": {
         "tprefix": "",
