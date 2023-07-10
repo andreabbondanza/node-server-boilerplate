@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "rm -fr ./dist && mkdir ./dist && node ./node_modules/typescript/bin/tsc && cp dev-host.json ./dist  && cd ./dist && node ./Startup.js debug=1 ",
-    "prod": "rm -fr ./dist && mkdir ./dist && node ./node_modules/typescript/bin/tsc && cp dev-host.json ./dist/  && cd ./dist && node ./Startup.js"
+    "prod": "rm -fr ./dist && mkdir ./dist && node ./node_modules/typescript/bin/tsc && cp host.json ./dist/  && cd ./dist && node ./Startup.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
