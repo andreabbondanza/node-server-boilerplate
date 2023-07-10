@@ -24,6 +24,7 @@ export class Controller implements IController
         return this._env;
     }
     protected server: Express;
+    // must start and end with "/"
     protected baseApiPath: string = "/api/";
     protected controllerPath: string = "";
     private _log: Logger;
@@ -74,7 +75,7 @@ export class Controller implements IController
         const paths: IPath[] = [];
         for (const currPath of pathsString)
         {
-              const stringToTest = currPath.replace(/\/:[A-z0-9]+(\?)?/gi, (match, optional) =>
+            const stringToTest = currPath.replace(/\/:[A-z0-9]+(\?)?/gi, (match, optional) =>
             {
                 if (optional)
                 {
@@ -122,6 +123,15 @@ export class Controller implements IController
         this.server = env.server;
         this._log = new Logger(env.isDev);
         this.controllerPath = controllerPath;
-        this.baseApiPath = env.configHost.app.baseApiPath !== "" ? env.configHost.app.baseApiPath : this.baseApiPath;
+        this.baseApiPath = this.getValidBaseApiPath();
+    }
+    /**
+     * Get the valid base api path with the "/" at the end and at the start
+     * @param env the environment
+     * @returns the valid base api path 
+     */
+    private getValidBaseApiPath(): string
+    {
+        return `/${(this._env.configHost.app.baseApiPath || this.baseApiPath).trim().replace(/^\/+|\/+$/g, '')}/`.replace(/\/{2,}/g, '/');
     }
 }
