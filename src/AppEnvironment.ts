@@ -8,8 +8,13 @@ import { IRepository } from "./interfaces/IRepository.interface.js";
 
 export class AppEnvironment
 {
+    private workDir: string;
     private _server: Express;
     private _routes: IRouteIndex;
+    public get workDirectory()
+    {
+        return this.workDir;
+    }
     private _repositories: Map<string, IRepository> = new Map();
     /**
      * Is the environment in dev mode
@@ -64,8 +69,9 @@ export class AppEnvironment
     {
         return this._server;
     }
-    public constructor(server: Express, isDev: boolean, routes: IRouteIndex)
+    public constructor(server: Express, isDev: boolean, routes: IRouteIndex, workDir: string)
     {
+        this.workDir = workDir;
         this._routes = routes;
         this._server = server;
         this._logger = new Logger(isDev);

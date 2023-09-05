@@ -1,13 +1,12 @@
-import express, { Express, RequestHandler } from "express";
+import { Express, RequestHandler } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { ParsedQs } from "qs";
-import { IConfigHost } from "./interfaces/IConfigHost.interface.js";
 import { AppEnvironment } from "./AppEnvironment.js";
 import { getMethods } from "./common/Utils.common.js";
 import { IControllerTuple } from "./interfaces/IControllerTuple.interface.js";
-
+import { dirname, resolve } from "path";
 import { Route, Routes } from "./common/Routes.common.js";
 
 
@@ -22,7 +21,7 @@ export class App
      */
     public constructor(server: Express, isDev: boolean = false)
     {
-        this._env = new AppEnvironment(server, isDev, Routes);
+        this._env = new AppEnvironment(server, isDev, Routes, resolve(dirname("")));
     }
 
     /**
