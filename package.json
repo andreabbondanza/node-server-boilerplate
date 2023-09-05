@@ -35,7 +35,6 @@
     "mysql2": "^3.0.0-rc.1",
     "node-fetch": "2.6.7",
     "nodemailer": "^6.8.0",
-    "paypal-rest-sdk": "^2.0.0-rc.2",
     "uuid": "^9.0.0",
     "zlib": "^1.0.5"
   }
