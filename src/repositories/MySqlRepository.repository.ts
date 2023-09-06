@@ -14,11 +14,11 @@ export class MYSqlRepository extends Repository
     {
         if (!this._connection)
             this._connection = await createConnection({
-                host: this._cfg.db.host,
-                user: this._cfg.db.usr,
-                password: this._cfg.db.pwd,
-                database: this._cfg.db.schema,
-                port: this._cfg.db.port
+                host: this._env.configHost.db.host,
+                user: this._env.configHost.db.usr,
+                password: this._env.configHost.db.pwd,
+                database: this._env.configHost.db.schema,
+                port: this._env.configHost.db.port
             });
         return this._connection;
     }
@@ -51,7 +51,7 @@ export class MYSqlRepository extends Repository
     public async select<T>(tname: DB_TABLES, conditions: Conditon<T> | Conditon<T>[] = [])
     {
         const conn = await this.getConnection();
-        let query = `SELECT * FROM ${this._cfg.db.tprefix}${tname} WHERE`;
+        let query = `SELECT * FROM ${this._env.configHost.db.tprefix}${tname} WHERE`;
         const values = [];
         if (typeof conditions[0] === "string")
         {
@@ -68,12 +68,12 @@ export class MYSqlRepository extends Repository
             query = query.substring(0, query.length - 3) + ";";
             values.push(...conditions.map(x => x[2]));
         }
-        this._logger.debug("-------------------------------------------------");
-        this._logger.debug(`QUERY:\n${query}`);
-        this._logger.debug(`Values:\n${JSON.stringify(values)}`);
+        this._env.logger.debug("-------------------------------------------------");
+        this._env.logger.debug(`QUERY:\n${query}`);
+        this._env.logger.debug(`Values:\n${JSON.stringify(values)}`);
         const [rows] = await conn.execute(query, values);
-        this._logger.debug("RESULT:")
-        this._logger.debug(JSON.stringify(rows));
+        this._env.logger.debug("RESULT:")
+        this._env.logger.debug(JSON.stringify(rows));
         return rows as T[];
     }
 
@@ -87,7 +87,7 @@ export class MYSqlRepository extends Repository
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `INSERT INTO ${this._cfg.db.tprefix}${tableName} `;
+        let query = `INSERT INTO ${this._env.configHost.db.tprefix}${tableName} `;
         const columns: string[] = [];
         for (const column of Object.keys(obj as any))
         {
@@ -101,9 +101,9 @@ export class MYSqlRepository extends Repository
             values.push(column);
         }
         query += `(${columns.join(",")}) VALUES (${ph.join(",")})`;
-        this._logger.debug("-------------------------------------------------");
-        this._logger.debug(`QUERY:\n${query}`);
-        this._logger.debug(`Values:\n${JSON.stringify(values)}`);
+        this._env.logger.debug("-------------------------------------------------");
+        this._env.logger.debug(`QUERY:\n${query}`);
+        this._env.logger.debug(`Values:\n${JSON.stringify(values)}`);
         const [res] = await conn.execute(query, values);
         const rsheader: ResultSetHeader = res as ResultSetHeader;
         if (rsheader.affectedRows > 0) return rsheader.insertId;
@@ -120,7 +120,7 @@ export class MYSqlRepository extends Repository
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `UPDATE ${this._cfg.db.tprefix}${tableName} SET`;
+        let query = `UPDATE ${this._env.configHost.db.tprefix}${tableName} SET`;
         const values = [];
         for (const column of columns)
         {
@@ -145,9 +145,9 @@ export class MYSqlRepository extends Repository
             query = query.substring(0, query.length - 3) + ";";
             values.push(...conditions.map(x => x[2]));
         }
-        this._logger.debug("-------------------------------------------------");
-        this._logger.debug(`QUERY:\n${query}`);
-        this._logger.debug(`Values:\n${JSON.stringify(values)}`);
+        this._env.logger.debug("-------------------------------------------------");
+        this._env.logger.debug(`QUERY:\n${query}`);
+        this._env.logger.debug(`Values:\n${JSON.stringify(values)}`);
         const [res] = await conn.execute(query, values);
         const rsheader: ResultSetHeader = res as ResultSetHeader;
         if (rsheader.affectedRows > 0) return rsheader.affectedRows;
@@ -163,7 +163,7 @@ export class MYSqlRepository extends Repository
     {
         const tableName = tname;
         const conn = await this.getConnection();
-        let query = `DELETE FROM ${this._cfg.db.tprefix}${tableName} WHERE`;
+        let query = `DELETE FROM ${this._env.configHost.db.tprefix}${tableName} WHERE`;
         const values = [];
         if (typeof conditions[0] === "string")
         {
@@ -180,9 +180,9 @@ export class MYSqlRepository extends Repository
             query = query.substring(0, query.length - 3) + ";";
             values.push(...conditions.map(x => x[2]));
         }
-        this._logger.debug("-------------------------------------------------");
-        this._logger.debug(`QUERY:\n${query}`);
-        this._logger.debug(`Values:\n${JSON.stringify(values)}`);
+        this._env.logger.debug("-------------------------------------------------");
+        this._env.logger.debug(`QUERY:\n${query}`);
+        this._env.logger.debug(`Values:\n${JSON.stringify(values)}`);
         const [res] = await conn.execute(query, values);
         const rsheader: ResultSetHeader = res as ResultSetHeader;
         if (rsheader.affectedRows > 0) return rsheader.affectedRows;

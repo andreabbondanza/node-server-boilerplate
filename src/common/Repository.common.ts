@@ -5,12 +5,10 @@ import { Logger } from "./Logger.common.js";
 
 export class Repository implements IRepository
 {
-    protected _cfg: IConfigHost;
-    protected _logger: Logger;
+    protected _env: AppEnvironment;
 
-    public constructor(cfg: IConfigHost, logger: Logger)
+    public constructor(env: AppEnvironment)
     {
-        this._cfg = cfg;
-        this._logger = logger;
+        this._env = env;
     }   
 }

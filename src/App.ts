@@ -80,7 +80,7 @@ export class App
         {
             const currRepo = await import("./" + join("./repositories", repo));
             const name = Object.keys(currRepo)[0];
-            this._env.pushRepository(name, new (currRepo[name])(this._env.configHost, this._env.logger));    
+            this._env.pushRepository(name, new (currRepo[name])(this._env));    
         }        
     }
 
