@@ -12,7 +12,7 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
 {
     return (req, res, next) =>
     {
-        const { verify } = jwt;
+        const { verify, decode } = jwt;
         // if (/api\/v[0-9]+\/public/.test(req.path))
         const path = getRoute(env.routes, req.path, req.method);
         const response = initSR();
@@ -31,9 +31,10 @@ export function routeMiddleware(env: AppEnvironment): RequestHandler<ParamsDicti
                 {
                     try
                     {
-                        const verified = verify(token.split(" ")[1], env.configHost.app.secret) as JwtPayload;
+                        const payload = decode(token.split(" ")[1]) as IAuthToken;
+                        const verified = verify(token.split(" ")[1], env.configHost.app.secret + payload.salt) as JwtPayload;
                         // append current user to request
-                        const user = { id: verified["id"], exp: verified.exp, name: verified["name"], role: verified["role"] } as IAuthToken;
+                        const user = { id: verified["id"], exp: verified.exp, name: verified["name"], role: verified["role"], salt: payload.salt } as IAuthToken;
                         (req as any).user = user;
                         // vedo se ho i permessi
                         if (path.roles.exists(x => x === user.role))

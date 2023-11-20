@@ -25,6 +25,7 @@ export class AuthService extends Service
         const data: IAuthToken = {
             id: user.Id,
             name: user.Name + " " + user.Surname,
+            salt: user.SaltRefresh,
             role: user.Role,
             exp: DateTime.now().plus({ days: _tokenExpDays }).toMillis()
         }
@@ -85,6 +86,22 @@ export class AuthService extends Service
     {
         const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
         const response = await db.update<Auth>([["Password", pwd]], ["Id", "=", id], "Auth");
+        if (response)
+        {
+            return true;
+        }
+        return false;
+    }
+    /**
+   * update user password
+   * @param id  id of user
+   * @param pwd  new password
+   * @returns  true if ok, false if not
+   */
+    public async updateSalt(id: number, salt: number): Promise<boolean | null>
+    {
+        const db = this.env.getRepository<MYSqlRepository>("MYSqlRepository");
+        const response = await db.update<Auth>([["Surname", salt]], ["Id", "=", id], "Auth");
         if (response)
         {
             return true;

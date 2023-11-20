@@ -11,6 +11,7 @@ import { AuthService } from "../services/Auth.service.js";
 import { EmailService } from "../services/EmailService.service.js";
 import generator from "easy-password-gen";
 import { LoginResponse } from "../models/LoginResponse.model.js";
+import { IAuthToken } from "../interfaces/IAuthToken.interface.js";
 
 /**
  * NOTE: ALl methods that start with _ will not be "ROUTED" at server startup
@@ -84,7 +85,7 @@ import { LoginResponse } from "../models/LoginResponse.model.js";
                         const user = await authService.login(body.email, hash);
                         if (user)
                         {
-                            response.data = authService.tokenGeneration(user, secret);
+                            response.data = authService.tokenGeneration(user, secret + user.SaltRefresh);
                             res.status(200).send(response);
                         }
                         else
@@ -114,16 +115,18 @@ import { LoginResponse } from "../models/LoginResponse.model.js";
                         const uservice = this._initService<AuthService>(new AuthService());
                         const secret = this.env.configHost.app.secret;
                         const rtoken = req.headers["r-token"] as string;
+                        const userFromToken = (req as any).user as IAuthToken;
                         try
                         {
-                            const verified = verify(rtoken, secret) as JwtPayload;
-                            // devo controllare su db se già è stato utilizzato
-                            const id = verified["id"] as number;
+                            const id = userFromToken.id;
                             const user = await uservice.getAuth(id);
-
+                       
                             if (user)
                             {
-                                response.data = uservice.tokenGeneration(user, secret);
+                                verify(rtoken, secret + user.SaltRefresh) as JwtPayload;
+                                const updated = await uservice.updateSalt(user.Id, user.SaltRefresh + 1);
+
+                                response.data = uservice.tokenGeneration(user, secret + user.SaltRefresh);
                                 res.status(200).send(response);
                             }
 
