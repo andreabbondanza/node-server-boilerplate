@@ -13,7 +13,11 @@ import { Route, Routes } from "./common/Routes.common.js";
 export class App
 {
     private _env: AppEnvironment;
-
+    // environment getter
+    public get env(): AppEnvironment
+    {
+        return this._env;
+    }
     /**
      * App Constructor
      * @param server the server express instance
